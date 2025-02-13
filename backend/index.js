@@ -1,48 +1,32 @@
-import express from 'express';
+import express from "express";
+import dotenv from "dotenv";
+import { connectDB } from "./db/connectDB.js";
+import { signin, signup } from "./controllers/user.controller.js"; // Ensure correct file extension
 
-import mongoose from "mongoose";
-
-
+dotenv.config(); 
 const app = express();
-const PORT = process.env.PORT||5000
+app.use(express.json());
 
 
 
-app.use("/api/v1/user",);
-app.use("/api/v1/admin",);
-app.use("/api/v1/course",);
+app.post('/signup', signup);
+app.post('/signin', signin);
+// Function to start the server
+const startServer = async () => {
 
+    try {
+        await connectDB(); // Ensure DB connection before starting server
+        console.log("✅ Database connected successfully");
 
-import mongoose from "mongoose";
+        const PORT = process.env.PORT || 5000;
 
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on port ${PORT}`);
+        });
 
-const connectDB =  async() =>{
-    
-    const MONGODB_URI = process.env.MONGODB_URI
-
-
-    try{
-
-
-        const conn = await mongoose.connect(MONGODB_URI);
-
-        console.log("MongoDB connected",conn.connection.host);
-
-    } catch(error){
-
-        throw new Error("Error connecting to database", error);
-
-        
-
+    } catch (error) {
+        console.error("❌ Database connection failed:", error);
+        process.exit(1); // Exit process if DB connection fails
     }
-
-
-
-}
-
-app.listen(PORT , ()=>{
-    connectDB();
-
-    console.log("server is running on port " + PORT);
-
-});
+};
+startServer();
