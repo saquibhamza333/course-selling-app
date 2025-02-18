@@ -1,17 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./db/connectDB.js";
-import { signin, signup } from "./controllers/user.controller.js"; // Ensure correct file extension
+import userRouter from "./routes/user.routes.js";
+
+
 
 dotenv.config(); 
 const app = express();
 app.use(express.json());
 
+app.use('/user',userRouter);
 
-
-app.post('/signup', signup);
-app.post('/signin', signin);
-// Function to start the server
 const startServer = async () => {
 
     try {
